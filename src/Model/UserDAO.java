@@ -30,14 +30,14 @@ public class UserDAO {
     UserList userList;
 
     private UserDAO() {
-        if(userDao.equals(null)){
-            userDao = new UserDAO();
-        }else{
-        }
+       
     }
 
     public static UserDAO getInstance() {
-        return userDao;
+       /* if (userDao == null) {
+			userDao = new UserDAO();
+        }*/
+		return userDao;
     }
 
     public UserList select() throws Exception {

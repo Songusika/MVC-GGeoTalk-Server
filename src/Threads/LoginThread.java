@@ -9,6 +9,7 @@ import java.net.*;
 import java.io.*;
 import Model.*;
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  *
@@ -20,12 +21,10 @@ public class LoginThread extends Thread {
     ServerSocket loginServer;
     Socket socket;
     ServerInfo loginSvInfo;
-    UserAccount user;
     int userNum = 0;
 
     public LoginThread() {
         loginSvInfo = ServerInfo.getInstance();
-        user = new UserAccount();
 
     }
 
@@ -48,11 +47,16 @@ public class LoginThread extends Thread {
         switch (user.getType()) {
             case 0:
                try {
-                var userInfo = UserDAO.getInstance().loginCheck(user.getId(), user.getPw());
+              //  System.out.println("체크타입 메서드");
+                Optional<UserAccount> userInfo = UserDAO.getInstance().loginCheck(user.getId(), user.getPw());
+           //     System.out.println("유저다오 넘어감");
                 if (userInfo.isPresent()) {
+                //   System.out.println("if문까지옴");
                     user.setChk(0, 0);
+                    break;
                 } else {
                     user.setChk(0, 1);
+                    break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,11 +69,13 @@ public class LoginThread extends Thread {
     }
 
     public void sendObject(int userNum, UserAccount user) {
-        try{
+        try {
+         //   System.out.println("샌드옵젝까지옴");
             ObjectOutputStream oos = usersMap.get(userNum);
+         
             oos.writeObject(user);
-        }catch(Exception e){
-        
+        } catch (Exception e) {
+
         }
     }
 
@@ -96,9 +102,10 @@ public class LoginThread extends Thread {
             try {
                 while (ois != null) {
                     user = (UserAccount) ois.readObject();
-                    System.out.println(user.getId()+ user.getPw()+ user.getType());
                     checkType(user);
+               //     System.out.println("체크 끝남");
                     sendObject(userNum, user);
+                  //  System.out.println("센드 끝남");
                 }
             } catch (Exception e) {
             }
