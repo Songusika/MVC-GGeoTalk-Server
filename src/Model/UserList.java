@@ -13,16 +13,16 @@ import java.util.ArrayList;
  * @author Seok17
  */
 public class UserList implements Serializable{
-        private ArrayList<UserAccount> UserList;
-
+        private ArrayList<UserAccount> userList = new ArrayList();
+        
 	public ArrayList<UserAccount> getUserList() {
-		return UserList;
+		return userList;
 	}
 
 	public void setUserlist(ArrayList<UserAccount> UserList) {
-		this.UserList = UserList;
+		this.userList = UserList;
 	}
 	public void addUserlist(UserAccount user) {
-		UserList.add(user);
+		userList.add(user);
 	}
 }
