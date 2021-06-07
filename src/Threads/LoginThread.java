@@ -8,8 +8,7 @@ package Threads;
 import java.net.*;
 import java.io.*;
 import Model.*;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 
 /**
  *
@@ -25,7 +24,7 @@ public class LoginThread extends Thread {
 
     public LoginThread() {
         loginSvInfo = ServerInfo.getInstance();
-
+        usersMap = new HashMap<>();
     }
 
     public void run() {
@@ -47,11 +46,11 @@ public class LoginThread extends Thread {
         switch (user.getType()) {
             case 0:
                try {
-              //  System.out.println("체크타입 메서드");
+                //  System.out.println("체크타입 메서드");
                 Optional<UserAccount> userInfo = UserDAO.getInstance().loginCheck(user.getId(), user.getPw());
-           //     System.out.println("유저다오 넘어감");
+                //     System.out.println("유저다오 넘어감");
                 if (userInfo.isPresent()) {
-                //   System.out.println("if문까지옴");
+                    //   System.out.println("if문까지옴");
                     user.setChk(0, 0);
                     break;
                 } else {
@@ -70,12 +69,26 @@ public class LoginThread extends Thread {
 
     public void sendObject(int userNum, UserAccount user) {
         try {
-         //   System.out.println("샌드옵젝까지옴");
+            //   System.out.println("샌드옵젝까지옴");
             ObjectOutputStream oos = usersMap.get(userNum);
-         
+
             oos.writeObject(user);
         } catch (Exception e) {
 
+        }
+    }
+
+    public void sendObject2(UserAccount user) {
+        try {
+            Iterator it = usersMap.keySet().iterator();
+            //   System.out.println("샌드옵젝까지옴");
+            while (it.hasNext()) {
+                ObjectOutputStream oos = (ObjectOutputStream)usersMap.get(it.next());
+                oos.writeObject(user);
+                System.out.println("WRITE 함");
+            }
+        } catch (Exception e) {
+            System.out.println("아잇 시팔");
         }
     }
 
@@ -88,6 +101,7 @@ public class LoginThread extends Thread {
         int userNum;
 
         public ServerReceiver(int userNum, Socket socket) {
+            System.out.println(userNum);
             this.userNum = userNum;
             this.socket = socket;
             try {
@@ -103,9 +117,9 @@ public class LoginThread extends Thread {
                 while (ois != null) {
                     user = (UserAccount) ois.readObject();
                     checkType(user);
-               //     System.out.println("체크 끝남");
-                    sendObject(userNum, user);
-                  //  System.out.println("센드 끝남");
+                    //     System.out.println("체크 끝남");
+                    sendObject2(user);
+                    //  System.out.println("센드 끝남");
                 }
             } catch (Exception e) {
             }
