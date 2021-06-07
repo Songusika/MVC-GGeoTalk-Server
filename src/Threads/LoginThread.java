@@ -74,7 +74,7 @@ public class LoginThread extends Thread {
 
             oos.writeObject(user);
         } catch (Exception e) {
-
+            System.out.println("아잇 시팔");
         }
     }
 
@@ -83,7 +83,7 @@ public class LoginThread extends Thread {
             Iterator it = usersMap.keySet().iterator();
             //   System.out.println("샌드옵젝까지옴");
             while (it.hasNext()) {
-                ObjectOutputStream oos = (ObjectOutputStream)usersMap.get(it.next());
+                ObjectOutputStream oos = (ObjectOutputStream) usersMap.get(it.next());
                 oos.writeObject(user);
                 System.out.println("WRITE 함");
             }
@@ -118,7 +118,7 @@ public class LoginThread extends Thread {
                     user = (UserAccount) ois.readObject();
                     checkType(user);
                     //     System.out.println("체크 끝남");
-                    sendObject2(user);
+                    sendObject(userNum, user);
                     //  System.out.println("센드 끝남");
                 }
             } catch (Exception e) {
