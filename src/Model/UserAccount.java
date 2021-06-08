@@ -13,7 +13,7 @@ public class UserAccount implements Serializable{
     private String id;
     private String pw;
     private String name;
-    private int type;  //0 = 로그인, 1 = 회원가입, 2 = 계정 찾기
+    private int type;  //0 = 로그인, 1 = 계정 찾기, 2 = 아이디 체크, 3 = 회원가입
     private int loginChk; // 로그인 할때, 0 = 로그인 허용, 1 = 로그인 불허
     private int idChk; // 회원가입시 아이디 중복 체크 0 = 없음, 1 = 있음
     private int pwChk; // 비밀번호 찾기, 0 = 맞는 비번 없음, 1 = 있음
@@ -48,9 +48,12 @@ public class UserAccount implements Serializable{
                 this.loginChk = chk;
                 break;
             case 1:
-                this.idChk = chk;
-            case 2:
                 this.pwChk = chk;
+                break;
+            case 2:
+                this.idChk = chk;
+                break;
+                
         }
     }
 
@@ -59,12 +62,11 @@ public int getChk(int type){
                 case 0:
                     return this.loginChk;
                 case 1:
-                    return this.idChk; 
-                case 2:
                     return this.pwChk;
+                case 2:
+                    return this.idChk;
                 default:
                     return 4;
             }
 }
-
 }

@@ -9,6 +9,6 @@ package Threads;
  *
  * @author Seok17
  */
-public class LogThread {
+public class LogThread extends Thread{
     
 }

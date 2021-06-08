@@ -25,6 +25,7 @@ public class LoginThread extends Thread {
     public LoginThread() {
         loginSvInfo = ServerInfo.getInstance();
         usersMap = new HashMap<>();
+        Collections.synchronizedMap(usersMap);
     }
 
     public void run() {
@@ -58,18 +59,34 @@ public class LoginThread extends Thread {
                     break;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println("로그인 처리에서 문제 발생");
             }
             case 1:
+                try {
 
+            } catch (Exception e) {
+                System.out.println("계정 찾기에서 문제 발생");
+            }
             case 2:
+                try {
+                user.setChk(2, UserDAO.getInstance().check(user.getId()));
+                break;
+            } catch (Exception e) {
+                System.out.println("중복 아이디 체크에서 문제 발생");
+            }
+            case 3:
+                 try {
+                  int loginOk = UserDAO.getInstance().insert(user.getId(), user.getPw(), user.getName());
+            } catch (Exception e) {
+                System.out.println("회원가입 처리에서 문제 발생");
+            }
 
         }
     }
 
     public void sendObject(int userNum, UserAccount user) {
         try {
-            //   System.out.println("샌드옵젝까지옴");
+            System.out.println("샌드옵젝까지옴");
             ObjectOutputStream oos = usersMap.get(userNum);
 
             oos.writeObject(user);
@@ -116,10 +133,11 @@ public class LoginThread extends Thread {
             try {
                 while (ois != null) {
                     user = (UserAccount) ois.readObject();
+                    System.out.println("받기 성공");
                     checkType(user);
                     //     System.out.println("체크 끝남");
                     sendObject(userNum, user);
-                    //  System.out.println("센드 끝남");
+                    System.out.println("센드 끝남");
                 }
             } catch (Exception e) {
             }

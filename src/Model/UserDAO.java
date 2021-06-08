@@ -57,7 +57,7 @@ public class UserDAO {
         return userList;
     }
 
-    public boolean check(String id) {
+    public int check(String id) {
         con = db.getConnection();
         ResultSet loginOk;
         try {
@@ -68,14 +68,14 @@ public class UserDAO {
             if (rs.next()) {
                 int cnt = rs.getInt("cnt");
                 if (cnt > 0) {
-                    return true;
+                    return 0;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return 1;
     }
 
     public int insert(String id, String pw, String name) {
