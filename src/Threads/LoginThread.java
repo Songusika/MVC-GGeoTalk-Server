@@ -9,6 +9,8 @@ import java.net.*;
 import java.io.*;
 import Model.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -61,6 +63,23 @@ public class LoginThread extends Thread {
                 e.printStackTrace();
             }
             case 1:
+                Optional<UserAccount> userInfo;
+                try {
+                    userInfo = UserDAO.getInstance().findPassword(user.getId(), user.getName());
+                    System.out.println(user.getId()+" "+ user.getName()); //무슨 값이 왔는지 확인하는 것은 중요하다
+                    if (userInfo.isPresent()) {
+                        user.setChk(1, 1); //비번이 있다.
+                        user.setPw(userInfo.get().getPw());
+                        System.out.println("그런 사람 있습니다.");
+                        break;
+                    } else {
+                        user.setChk(1, 0); //비번이 없다
+                        System.out.println("그런 사람 없습니다.");
+                        break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             case 2:
 
@@ -69,7 +88,7 @@ public class LoginThread extends Thread {
 
     public void sendObject(int userNum, UserAccount user) {
         try {
-            //   System.out.println("샌드옵젝까지옴");
+            System.out.println("샌드옵젝까지옴");
             ObjectOutputStream oos = usersMap.get(userNum);
 
             oos.writeObject(user);
@@ -115,11 +134,13 @@ public class LoginThread extends Thread {
         public void run() {
             try {
                 while (ois != null) {
+                    System.out.println("스레드시작");
                     user = (UserAccount) ois.readObject();
+                    System.out.println("객체바듬");
                     checkType(user);
-                    //     System.out.println("체크 끝남");
+                    System.out.println("체크 끝남");
                     sendObject(userNum, user);
-                    //  System.out.println("센드 끝남");
+                    System.out.println("센드 끝남");
                 }
             } catch (Exception e) {
             }
