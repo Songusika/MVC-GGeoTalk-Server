@@ -43,72 +43,6 @@ public class LoginThread extends Thread {
         }
     }
 
-    public void checkType(UserAccount user) {
-        switch (user.getType()) {
-            case 0:
-               try {
-                //  System.out.println("체크타입 메서드");
-                Optional<UserAccount> userInfo = UserDAO.getInstance().loginCheck(user.getId(), user.getPw());
-                //     System.out.println("유저다오 넘어감");
-                if (userInfo.isPresent()) {
-                    //   System.out.println("if문까지옴");
-                    user.setChk(0, 0);
-                    break;
-                } else {
-                    user.setChk(0, 1);
-                    break;
-                }
-            } catch (Exception e) {
-                System.out.println("로그인 처리에서 문제 발생");
-            }
-            case 1:
-                try {
-
-            } catch (Exception e) {
-                System.out.println("계정 찾기에서 문제 발생");
-            }
-            case 2:
-                try {
-                user.setChk(2, UserDAO.getInstance().check(user.getId()));
-                break;
-            } catch (Exception e) {
-                System.out.println("중복 아이디 체크에서 문제 발생");
-            }
-            case 3:
-                 try {
-                  int loginOk = UserDAO.getInstance().insert(user.getId(), user.getPw(), user.getName());
-            } catch (Exception e) {
-                System.out.println("회원가입 처리에서 문제 발생");
-            }
-
-        }
-    }
-
-    public void sendObject(int userNum, UserAccount user) {
-        try {
-            System.out.println("샌드옵젝까지옴");
-            ObjectOutputStream oos = usersMap.get(userNum);
-
-            oos.writeObject(user);
-        } catch (Exception e) {
-            System.out.println("아잇 시팔");
-        }
-    }
-
-    public void sendObject2(UserAccount user) {
-        try {
-            Iterator it = usersMap.keySet().iterator();
-            //   System.out.println("샌드옵젝까지옴");
-            while (it.hasNext()) {
-                ObjectOutputStream oos = (ObjectOutputStream) usersMap.get(it.next());
-                oos.writeObject(user);
-                System.out.println("WRITE 함");
-            }
-        } catch (Exception e) {
-            System.out.println("아잇 시팔");
-        }
-    }
-
     class ServerReceiver extends Thread {
 
         Socket socket;
@@ -129,19 +63,79 @@ public class LoginThread extends Thread {
             }
         }
 
+        public void checkType(UserAccount user) {
+            switch (user.getType()) {
+                case 0:
+               try {
+                    //  System.out.println("체크타입 메서드");
+                    System.out.println("=====================================");
+                    System.out.println("로그인 요청: " + user.getId());
+                    Optional<UserAccount> userInfo = UserDAO.getInstance().loginCheck(user.getId(), user.getPw());
+                    //     System.out.println("유저다오 넘어감");
+                    if (userInfo.isPresent()) {
+                        //   System.out.println("if문까지옴");
+                        user.setChk(0, 0);
+                        break;
+                    } else {
+                        user.setChk(0, 1);
+                        break;
+                    }
+                } catch (Exception e) {
+                    System.out.println("로그인 처리에서 문제 발생");
+                }
+                case 1:
+                try {
+
+                } catch (Exception e) {
+                    System.out.println("계정 찾기에서 문제 발생");
+                }
+                case 2:
+                try {
+                    System.out.println("중복아이디체크====================================");
+                    System.out.println("받은 아이디 : "+user.getId());
+                    System.out.println("해쉬 코드 : "+ System.identityHashCode(user));
+                    System.out.println(UserDAO.getInstance().check(user.getId()));
+                    user.setChk(2, UserDAO.getInstance().check(user.getId()));
+                    break;
+                } catch (Exception e) {
+                    System.out.println("중복 아이디 체크에서 문제 발생");
+                }
+                case 3:
+                 try {
+                    int loginOk = UserDAO.getInstance().insert(user.getId(), user.getPw(), user.getName());
+                } catch (Exception e) {
+                    System.out.println("회원가입 처리에서 문제 발생");
+                }
+
+            }
+        }
+
+        public void sendObject(int userNum, UserAccount user) {
+            try {
+                System.out.println("샌드옵젝까지옴");
+                ObjectOutputStream oos = usersMap.get(userNum);
+
+                oos.writeObject(user);
+                oos.flush();
+            } catch (Exception e) {
+                System.out.println("아잇 시팔");
+            }
+        }
+
         public void run() {
             try {
                 while (ois != null) {
+
                     user = (UserAccount) ois.readObject();
                     System.out.println("받기 성공");
                     checkType(user);
-                    //     System.out.println("체크 끝남");
+                    //System.out.println("체크 끝남");
                     sendObject(userNum, user);
                     System.out.println("센드 끝남");
+                    user = null;
                 }
             } catch (Exception e) {
             }
         }
     }
-
 }
