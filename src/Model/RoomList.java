@@ -4,23 +4,28 @@
  * and open the template in the editor.
  */
 package Model;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+
 /**
  *
  * @author Seok17
  */
-public class RoomList implements Serializable{
+public class RoomList implements Serializable {
+
     private ArrayList<RoomInfo> roomlist;
+    int len=0;
+    
+    public ArrayList<RoomInfo> getRoomlist() {
+        return roomlist;
+    }
 
-	public ArrayList<RoomInfo> getRoomlist() {
-		return roomlist;
-	}
+    public void setRoomlist(ArrayList<RoomInfo> roomlist) {
+        this.roomlist = roomlist;
+    }
 
-	public void setRoomlist(ArrayList<RoomInfo> roomlist) {
-		this.roomlist = roomlist;
-	}
-	public void addRoomlist(RoomInfo room) {
-		roomlist.add(room);
-	}
+    public void addRoomlist(RoomInfo room) {
+        roomlist.add(room);
+    }
 }
