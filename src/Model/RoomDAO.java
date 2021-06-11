@@ -48,7 +48,7 @@ public class RoomDAO {
             return RoomOk;
         }
     
-    public RoomList getRoomInfo() throws Exception{
+    public RoomList getRoomlist() throws Exception{
             con = db.getConnection();
             String sql = "SELECT * FROM ROOM";
             try{
@@ -65,7 +65,7 @@ public class RoomDAO {
              }catch(Exception e){
                 e.printStackTrace();
             }
-      
+            roomList.setlen(getRoomLen());
             return roomList;
         }
         

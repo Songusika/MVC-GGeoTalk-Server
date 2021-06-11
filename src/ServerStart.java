@@ -12,5 +12,7 @@ public class ServerStart {
     public static void main(String[] args){
         LoginThread login = new LoginThread();
         login.start();
+        LobbyThread lobby = new LobbyThread();
+        lobby.start();
     }
 }

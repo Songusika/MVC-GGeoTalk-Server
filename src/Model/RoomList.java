@@ -17,6 +17,10 @@ public class RoomList implements Serializable {
     private ArrayList<RoomInfo> roomlist;
     int len=0;
     
+    public RoomList(){
+        roomlist = new ArrayList<RoomInfo>();
+    }
+    
     public ArrayList<RoomInfo> getRoomlist() {
         return roomlist;
     }
@@ -27,5 +31,18 @@ public class RoomList implements Serializable {
 
     public void addRoomlist(RoomInfo room) {
         roomlist.add(room);
+    }
+    
+    public void setlen(int len){
+        this.len = len;
+    }
+    
+    public int getlen(){
+        return len;
+    }
+    
+    
+    public String[] getRoomNames(){
+        Iterable it = 
     }
 }
