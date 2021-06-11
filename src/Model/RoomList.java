@@ -7,6 +7,7 @@ package Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -40,9 +41,16 @@ public class RoomList implements Serializable {
     public int getlen(){
         return len;
     }
-    
-    
+
     public String[] getRoomNames(){
-        Iterable it = 
+        Iterator<RoomInfo> it = roomlist.iterator();
+        String[] roomnames = new String[this.getlen()];
+        int i = 0;
+        while(it.hasNext()){
+            RoomInfo room = it.next();
+            roomnames[i++] = room.getRoomName();
+        }
+        return roomnames;
+        
     }
 }

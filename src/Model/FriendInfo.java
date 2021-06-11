@@ -17,6 +17,12 @@ public class FriendInfo implements Serializable{
 	private String name;
 	private String type;
 	
+        public FriendInfo(){}
+        
+        public FriendInfo(String user){
+            this.user = user;
+        }
+        
 	public String getId() {
 		return Id;
 	}

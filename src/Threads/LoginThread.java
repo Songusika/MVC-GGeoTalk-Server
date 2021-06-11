@@ -67,13 +67,14 @@ public class LoginThread extends Thread {
             switch (user.getType()) {
                 case 0:
                try {
-                    //  System.out.println("체크타입 메서드");
+
                     System.out.println("=====================================");
                     System.out.println("로그인 요청: " + user.getId());
                     Optional<UserAccount> userInfo = UserDAO.getInstance().loginCheck(user.getId(), user.getPw());
-                    //     System.out.println("유저다오 넘어감");
+
                     if (userInfo.isPresent()) {
-                        //   System.out.println("if문까지옴");
+
+                        user.setName(userInfo.get().getName());
                         user.setChk(0, 0);
                         break;
                     } else {
@@ -84,29 +85,29 @@ public class LoginThread extends Thread {
                     System.out.println("로그인 처리에서 문제 발생");
                 }
                 case 1:
-                Optional<UserAccount> userInfo;
-                try {
-                    userInfo = UserDAO.getInstance().findPassword(user.getId(), user.getName());
-                    System.out.println(user.getId()+" "+ user.getName()); //무슨 값이 왔는지 확인하는 것은 중요하다
-                    if (userInfo.isPresent()) {
-                        user.setChk(1, 1); //비번이 있다.
-                        user.setPw(userInfo.get().getPw());
-                        System.out.println("그런 사람 있습니다.");
-                        break;
-                    } else {
-                        user.setChk(1, 0); //비번이 없다
-                        System.out.println("그런 사람 없습니다.");
-                        break;
+                    Optional<UserAccount> userInfo;
+                    try {
+                        userInfo = UserDAO.getInstance().findPassword(user.getId(), user.getName());
+                        System.out.println(user.getId() + " " + user.getName()); //무슨 값이 왔는지 확인하는 것은 중요하다
+                        if (userInfo.isPresent()) {
+                            user.setChk(1, 1); //비번이 있다.
+                            user.setPw(userInfo.get().getPw());
+                            System.out.println("그런 사람 있습니다.");
+                            break;
+                        } else {
+                            user.setChk(1, 0); //비번이 없다
+                            System.out.println("그런 사람 없습니다.");
+                            break;
+                        }
+                    } catch (Exception e) {
+                        System.out.println("계정 찾기에서 문제 발생 ");
                     }
-                } catch (Exception e) {
-                    System.out.println("계정 찾기에서 문제 발생 ");
-                }
 
                 case 2:
                 try {
                     System.out.println("중복아이디체크====================================");
-                    System.out.println("받은 아이디 : "+user.getId());
-                    System.out.println("해쉬 코드 : "+ System.identityHashCode(user));
+                    System.out.println("받은 아이디 : " + user.getId());
+                    System.out.println("해쉬 코드 : " + System.identityHashCode(user));
                     System.out.println(UserDAO.getInstance().check(user.getId()));
                     user.setChk(2, UserDAO.getInstance().check(user.getId()));
                     break;

@@ -5,6 +5,7 @@
  */
 package Threads;
 
+import Model.FriendDAO;
 import Model.FriendInfo;
 import Model.FriendList;
 import Model.RoomDAO;
@@ -80,39 +81,43 @@ public class LobbyThread extends Thread {
             }
         }
 
-        /*
-        public void checkType(Object receviedObject) {
-            String obname = receviedObject.getClass().getSimpleName();
-            if (obname.equals("RoomList")) {
-                try {
-                    roomlist = RoomDAO.getInstance().getRoomlist();
-                    receviedObject = roomlist;
-                } catch (Exception e) {
-                    System.out.println("방리스트를 db에서 가져오는 중 익셥션 ");
-                }
-            } else if (obname.equals("FriendList")) {
-                try {
-
-                } catch (Exception e) {
-                    System.out.println("친구리스트를 db에서 가져오는 중 익셥션");
-                }
-            }
-        }*/
         public void checkType(LobbyModel lobbymodel) {
             switch (lobbymodel.getType()) {
                 case 0: //친구 리스트 요청 
-                 //   friendlist;
-                case 1: //방 리스트 요청
+                    System.out.println("친구리스트 요청 받음");
                     try {
-                    roomlist = RoomDAO.getInstance().getRoomlist();
-                    lobbymodel.setModel(1, roomlist);
-                } catch (Exception e) {
-                    System.out.println("방 리스트 db 조회 중 익셉션");
-                }
+                        friendlist = (FriendList)lobbymodel.getModel(0);
+                        friendlist = FriendDAO.getInstance().getFriend(friendlist.getMe());
+                        lobbymodel.setModel(0, friendlist);
+                    } catch (Exception e) {
+                        System.out.println("친구 리스트 db 조회 중 익셉션");
+                    }
+                    break;
+                case 1: //방 리스트 요청
+                    System.out.println("방리스트 요청 받음");
+                    try {
+                        roomlist = RoomDAO.getInstance().getRoomlist();
+                        lobbymodel.setModel(1, roomlist);
+                    } catch (Exception e) {
+                        System.out.println("방 리스트 db 조회 중 익셉션");
+                    }
+                    break;
                 case 2: //친구검색 요청
-
+                    System.out.println("친구 검색 요청 받음");
+                    try {
+                        
+                    } catch (Exception e) {
+                        System.out.println("친구 db 추가 중 익셉션 ");
+                    }
+                    break;
                 case 3: //방 등록 요청 
-
+                    System.out.println("방 등록 요청 받음");
+                    try {
+                        
+                    } catch (Exception e) {
+                        System.out.println("방 db 추가 중 익셉션 ");
+                    }
+                    break;
             }
 
         }

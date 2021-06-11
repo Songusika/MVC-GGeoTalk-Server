@@ -33,31 +33,34 @@ public class FriendDAO {
     }
 
     //친구 리스트 뽑는 함수 인자(나) 유저아이디와 친구아이디, 친구이름 리스트 반환
-    public Optional<FriendList> getFriend(String me) throws Exception {
+    public FriendList getFriend(String me) throws Exception {
         con = db.getConnection();
         String sql = "SELECT f.user_id, f.friend_id, c.NAME FROM gegeo_db.FRIEND f INNER JOIN gegeo_db.CUSTOMER c ON f.friend_id  = c.id  WHERE f.user_id ='" + me + "'";
+        int i = 0;
         try {
             pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
             friendList = new FriendList(); //친구리스트 모델 생성
-
+            
             while (rs.next()) {
                 friend = new FriendInfo();
                 friend.setUser(rs.getString("user_id")); //유저 아이디
                 friend.setId(rs.getString("friend_id")); //친구 아이디
                 friend.setName(rs.getString("NAME")); //친구 이름
                 friendList.addFriendlist(friend); //리스트에 추가
+                i++;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return Optional.empty();
+            return null;
         }
         for (FriendInfo friend : friendList.getFriendlist()) {
             if (!(me.equals(friend.getUser()))) {
-                return Optional.empty(); //하나라도 오류가 있다면 문제가 있다.
+                return null; //하나라도 오류가 있다면 문제가 있다.
             }
         }
-        return Optional.of(friendList);//테스트를 통과한 트-루 친구리스트
+        friendList.setlen(i);
+        return friendList;//테스트를 통과한 트-루 친구리스트
     }
 
     //친구 추가함수 인자(나, 추가할 친구) (이미 있는 친구 추가를 막는 기능 추가)
