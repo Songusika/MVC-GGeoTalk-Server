@@ -66,6 +66,9 @@ public class FriendDAO {
     //친구 추가함수 인자(나, 추가할 친구) (이미 있는 친구 추가를 막는 기능 추가)
     public int InsertFriend(String me, String you) {
         int FriendOK; //친구 추가 되었는지 숫자로 전달(디비에서 값 머오는지 확인 필요)
+        if(UserDAO.getInstance().check(you) == 1){
+            return FriendOK = 2; //그런 친구가 없음.
+        }
         if (friendDuplicateCheck(me, you)) {
             return FriendOK = 0;//실패
         }

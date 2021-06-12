@@ -27,19 +27,19 @@ import java.util.Optional;
  * @author Seok17
  */
 public class LobbyThread extends Thread {
-
+    
     HashMap<Integer, ObjectOutputStream> usersMap;
     ServerSocket lobbyServer;
     Socket socket;
     ServerInfo lobbySvInfo;
     int userNum = 0;
-
+    
     public LobbyThread() {
         lobbySvInfo = ServerInfo.getInstance();
         usersMap = new HashMap<>();
         Collections.synchronizedMap(usersMap);
     }
-
+    
     public void run() {
         try {
             System.out.println("로비 서버 시작");
@@ -51,24 +51,24 @@ public class LobbyThread extends Thread {
                 thread.start();
             }
         } catch (Exception e) {
-
+            
         }
     }
-
+    
     class ServerReceiver extends Thread {
-
+        
         Socket socket;
         ObjectInputStream ois;
         ObjectOutputStream oos;
-
+        
         LobbyModel lobbymodel;
         FriendList friendlist;
         RoomList roomlist;
         RoomInfo roominfo;
         FriendInfo friendinfo;
-
+        
         int userNum;
-
+        
         public ServerReceiver(int userNum, Socket socket) {
             System.out.println(userNum);
             this.userNum = userNum;
@@ -80,13 +80,13 @@ public class LobbyThread extends Thread {
             } catch (Exception e) {
             }
         }
-
+        
         public void checkType(LobbyModel lobbymodel) {
             switch (lobbymodel.getType()) {
                 case 0: //친구 리스트 요청 
                     System.out.println("친구리스트 요청 받음");
                     try {
-                        friendlist = (FriendList)lobbymodel.getModel(0);
+                        friendlist = (FriendList) lobbymodel.getModel(0);
                         friendlist = FriendDAO.getInstance().getFriend(friendlist.getMe());
                         lobbymodel.setModel(0, friendlist);
                     } catch (Exception e) {
@@ -105,6 +105,14 @@ public class LobbyThread extends Thread {
                 case 2: //친구검색 요청
                     System.out.println("친구 검색 요청 받음");
                     try {
+                        friendinfo = (FriendInfo) lobbymodel.getModel(2);
+                        String me = friendinfo.getUser();
+                        String you = friendinfo.getId();
+                        int ok = FriendDAO.getInstance().InsertFriend(me, you);
+                        friendinfo.setResult(ok);
+                        System.out.println("@@@@@@@@@@@@@@@@@@@@@");
+                        System.out.println(friendinfo.getResult());
+                        lobbymodel.setModel(2, friendinfo);
                         
                     } catch (Exception e) {
                         System.out.println("친구 db 추가 중 익셉션 ");
@@ -113,20 +121,25 @@ public class LobbyThread extends Thread {
                 case 3: //방 등록 요청 
                     System.out.println("방 등록 요청 받음");
                     try {
+                        roominfo = (RoomInfo) lobbymodel.getModel(3);
+                        String room = roominfo.getRoomName();
+                        int ok = RoomDAO.getInstance().insertRoom(room);
+                        roominfo.setType(ok);
+                        lobbymodel.setModel(3, roominfo);
                         
                     } catch (Exception e) {
                         System.out.println("방 db 추가 중 익셉션 ");
                     }
                     break;
             }
-
+            
         }
-
+        
         public void sendObject(int userNum, Object receviedObject) {
             try {
                 System.out.println("샌드옵젝까지옴");
                 ObjectOutputStream oos = usersMap.get(userNum);
-
+                
                 oos.writeObject(receviedObject);
                 oos.flush();
                 oos.reset();
@@ -134,14 +147,14 @@ public class LobbyThread extends Thread {
                 System.out.println("아잇 시팔");
             }
         }
-
+        
         public void run() {
             try {
                 while (ois != null) {
                     lobbymodel = (LobbyModel) ois.readObject();
                     System.out.println("받기 성공");
                     checkType(lobbymodel);
-
+                    
                     sendObject(userNum, lobbymodel);
                     System.out.println("센드 끝남");
                     lobbymodel = null;

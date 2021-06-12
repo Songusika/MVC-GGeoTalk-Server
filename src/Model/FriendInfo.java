@@ -15,7 +15,8 @@ public class FriendInfo implements Serializable{
     private String user;
 	private String Id;
 	private String name;
-	private String type;
+        private int result = 0; //1성공, 2 없는, 0중복  
+	private int type;  //0 추가, 1 삭제 
 	
         public FriendInfo(){}
         
@@ -35,10 +36,10 @@ public class FriendInfo implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(int type) {
 		this.type = type;
 	}
 	public String getUser() {
@@ -47,4 +48,11 @@ public class FriendInfo implements Serializable{
 	public void setUser(String user) {
 		this.user = user;
 	}
+        public void setResult(int result){
+            this.result = result;
+        }
+        
+        public int getResult(){
+            return this.result;
+        }
 }

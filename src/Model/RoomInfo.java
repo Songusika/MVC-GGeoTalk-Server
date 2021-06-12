@@ -13,18 +13,26 @@ import java.io.Serializable;
  */
 public class RoomInfo implements Serializable{
      private String roomName;
-    private int roomId;
+    private int type;
+    private int roomid;
     
     public void setRoomName(String roomName){
         this.roomName = roomName;
     }
-    public void setroomId(int roomId){
-        this.roomId = roomId;
+    public void setType(int roomId){
+        this.type = type;
     }
     public String getRoomName(){
         return this.roomName;
     }
+    public int getType(){
+        return this.type;
+    }
+    
+    public void setroomId(int id){
+        this.roomid = id;
+    }
     public int getroomId(){
-        return this.roomId;
+        return this.roomid;
     }
 }
