@@ -14,5 +14,7 @@ public class ServerStart {
         login.start();
         LobbyThread lobby = new LobbyThread();
         lobby.start();
+        ChatThread chat = new ChatThread();
+        chat.start();
     }
 }

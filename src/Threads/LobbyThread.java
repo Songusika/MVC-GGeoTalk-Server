@@ -46,7 +46,8 @@ public class LobbyThread extends Thread {
             lobbyServer = new ServerSocket(lobbySvInfo.lobbyPort);
             while (true) {
                 socket = lobbyServer.accept();
-                System.out.println(++userNum + "번 유저 로비에 연결됨");
+                System.out.println("====================================");
+                System.out.println(++userNum + "번 유저 로비 서버 연결됨");
                 ServerReceiver thread = new ServerReceiver(userNum, socket);
                 thread.start();
             }

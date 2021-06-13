@@ -14,6 +14,8 @@ import java.util.Iterator;
  * @author Seok17
  */
 public class RoomList implements Serializable {
+    
+    private static final long serialVersionUID = 6529685098267757690L;
 
     private ArrayList<RoomInfo> roomlist;
     int len=0;
@@ -41,7 +43,11 @@ public class RoomList implements Serializable {
     public int getlen(){
         return len;
     }
-
+    
+    public RoomInfo getRoom(int i){
+        return roomlist.get(i);
+    }
+    
     public String[] getRoomNames(){
         Iterator<RoomInfo> it = roomlist.iterator();
         String[] roomnames = new String[this.getlen()];

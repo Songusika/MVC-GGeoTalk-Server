@@ -34,7 +34,8 @@ public class LoginThread extends Thread {
             System.out.println("로그인 서버 시작됨");
             while (true) {
                 socket = loginServer.accept();
-                System.out.println(++userNum + "번 유저 연결 됨");
+                System.out.println("=========================================");
+                System.out.println(++userNum + "번 유저 로그인 서버 연결 됨");
                 ServerReceiver thread = new ServerReceiver(userNum, socket);
                 thread.start();
             }
