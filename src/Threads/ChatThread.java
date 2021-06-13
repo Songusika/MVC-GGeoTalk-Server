@@ -25,7 +25,7 @@ import java.util.Iterator;
  */
 public class ChatThread extends Thread {
 
-    MessageList msgList;
+    public static MessageList msgList;
     HashMap<Integer, ObjectOutputStream> usersMap;
     ServerSocket lobbyServer;
     Socket socket;
@@ -81,7 +81,9 @@ public class ChatThread extends Thread {
                 usersMap.put(userNum, oos);
             } catch (Exception e) {
             }
-
+            Thread log = new Thread(new LogThread(oos));
+            log.start();
+            
         }
 
         public void run() {
@@ -89,7 +91,8 @@ public class ChatThread extends Thread {
                 while (socket != null) {
                     msgObject = (MessageInfo) ois.readObject();
                     System.out.println("" + msgObject.getId() + "번 방" + msgObject.getName() + " 유저 <" + msgObject.getMessage() + ">  메시지 받음!");
-                    msgList.addMessageist(msgObject);
+                    ChatThread.msgList.addMessageist(msgObject);
+                   
                     System.out.println("메시지 브로드 캐스트 시작!");
                     sendToAll(msgObject);
                 }

@@ -33,7 +33,7 @@ public class MessageList implements Serializable {
         this.len = len;
     }
 
-    public void addMessageist(MessageInfo messageInfo) {
+     synchronized public void addMessageist(MessageInfo messageInfo) {
         messagelist.add(messageInfo);
     }
 
